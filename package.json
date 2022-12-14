@@ -1,6 +1,6 @@
 {
     "name": "solance_core",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "main": "dist/app/index.js",
     "scripts": {
         "build": "yarn clean && tsc",
