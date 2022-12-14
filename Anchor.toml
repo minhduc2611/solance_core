@@ -1,0 +1,16 @@
+[features]
+seeds = false
+skip-lint = false
+
+[programs.devnet]
+solance_core = "593Pj7uEyxExsxUiVV55bDScRzyEM9L7d5UUjjSRUbpv"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "devnet"
+wallet = "/Users/ducle/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.test.ts"
