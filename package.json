@@ -1,6 +1,6 @@
 {
-    "name": "solance_core",
-    "version": "1.0.5",
+    "name": "@solance_core/task",
+    "version": "1.0.6",
     "main": "dist/app/index.js",
     "scripts": {
         "build": "yarn clean && tsc",
@@ -10,14 +10,14 @@
         "pretest": "yarn build",
         "test": "mocha --require ts-node/register -t 120000 lib-tests/**/*.test.ts"
     },
-    "author": "Duc Test",
+    "author": "Duc Le Minh",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/DescartesNetwork/sen-otc-prog.git"
+        "url": "git+https://github.com/minhduc2611/solance_core.git"
     },
     "bugs": {
-        "url": "https://github.com/DescartesNetwork/sen-otc-prog/issues"
+        "url": "https://github.com/minhduc2611/solance_core/issues"
     },
     "publishConfig": {
         "access": "public",
