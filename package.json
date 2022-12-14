@@ -1,5 +1,5 @@
 {
-    "name": "@solance_core/task",
+    "name": "solance_core",
     "version": "1.0.6",
     "main": "dist/app/index.js",
     "scripts": {
