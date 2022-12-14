@@ -44,7 +44,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Deploy docs to gh-pages branch
         run: |
-          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/solance_core.git
+          git remote set-url origin https://git:${GITHUB_TOKEN}@github.com/minhduc2611/solance_core.git
           yarn docs -- -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
