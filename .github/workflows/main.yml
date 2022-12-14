@@ -39,7 +39,7 @@ jobs:
           anchor build
           yarn build
       - name: Publish the package
-        run: npm version patch
+        run: npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Deploy docs to gh-pages branch
