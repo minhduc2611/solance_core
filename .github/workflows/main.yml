@@ -48,3 +48,4 @@ jobs:
           yarn docs -- -u "github-actions-bot <support+actions@github.com>"
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_REPOSITORY: solance_core
