@@ -18,7 +18,7 @@ import {
   SolanceCoreEvents,
   PoolData,
 } from "./types";
-import { isAddress } from "./utils";
+import { isAddress, toCrc32 } from "./utils";
 
 class SolanceCorePrg {
   private _connection: web3.Connection;
@@ -30,8 +30,8 @@ class SolanceCorePrg {
     rpcEndpoint: string = DEFAULT_RPC_ENDPOINT,
     programId: string = DEFAULT_PROGRAM_ID
   ) {
-    console.log('rpcEndpoint', DEFAULT_RPC_ENDPOINT)
-    console.log('programId', DEFAULT_PROGRAM_ID)
+    console.log("rpcEndpoint", DEFAULT_RPC_ENDPOINT);
+    console.log("programId", DEFAULT_PROGRAM_ID);
     if (!isAddress(programId)) throw new Error("Invalid program id");
     // Private
     this._connection = new web3.Connection(rpcEndpoint, "confirmed");
@@ -270,12 +270,13 @@ class SolanceCorePrg {
     },
     sendAndConfirm = true
   ) => {
+    if (!id) throw new Error("Id not found");
     const [task_pda] = await web3.PublicKey.findProgramAddress(
       [utf8.encode("task_issuing"), utf8.encode(id)],
       this.program.programId
     );
     const builder = this.program.methods
-      .taskCreateAndIssueCond(id, name)
+      .taskCreateAndIssueCond(toCrc32(id), name)
       .accounts({
         task: task_pda,
         authority: this._provider.wallet.publicKey,
