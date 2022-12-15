@@ -17,6 +17,7 @@ import {
   AnchorWallet,
   SolanceCoreEvents,
   PoolData,
+  Task,
 } from "./types";
 import { isAddress, toCrc32 } from "./utils";
 
@@ -260,16 +261,9 @@ class SolanceCorePrg {
     return { tx, txId };
   };
 
-  createTask = async (
-    {
-      id,
-      name,
-    }: {
-      id: string;
-      name: string;
-    },
-    sendAndConfirm = true
-  ) => {
+  createTask = async (task: Task, sendAndConfirm = true) => {
+    if (!task) throw new Error("Task not found");
+    const { id, name } = task;
     if (!id) throw new Error("Id not found");
     const [task_pda] = await web3.PublicKey.findProgramAddress(
       [utf8.encode("task_issuing"), utf8.encode(id)],
