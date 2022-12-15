@@ -22,7 +22,7 @@ const PRIV_KEY_FOR_TEST_ONLY = Buffer.from([
   25, 127, 150, 87, 141, 234, 34, 239, 139, 107, 155, 32, 47, 199,
 ]);
 
-describe("task", function () {
+describe.only("task", function () {
   const wallet = new Wallet(web3.Keypair.fromSecretKey(PRIV_KEY_FOR_TEST_ONLY));
   let solanceCorePrg: SolanceCorePrg,
     connection: web3.Connection,
@@ -95,11 +95,11 @@ describe("task", function () {
     connection = solanceCorePrg.program.provider.connection;
   });
 
-  it("create pool", async () => {
+  it("create task", async () => {
     const { txId } = await solanceCorePrg.createTask(
       {
-        id: toCrc32(uuidv4()),
-        name: "MockTask",
+        id: uuidv4(),
+        name: "MockTask test lib",
       },
       true
     );

@@ -11,11 +11,11 @@ use anchor_spl::token::{self, Token};
 use std::mem::size_of;
 
 #[derive(Accounts)]
-#[instruction(id: String)]
+#[instruction(hashed_seed: String)]
 pub struct TaskCreateAndIssueCondition<'info> {
   #[account(
         init,
-        seeds = [b"task_issuing".as_ref(), id.as_ref()],
+        seeds = [b"task_issuing".as_ref(), hashed_seed.as_ref()],
         bump,
         payer = authority,
         space = size_of::<Task>() + Task::LEN,
@@ -38,10 +38,12 @@ pub struct TaskCreateAndIssueCondition<'info> {
 
 pub fn exec(
   ctx: Context<TaskCreateAndIssueCondition>,
+  hashed_seed: String,
   id: String,
   name: String,
 ) -> Result<()> {
   let task = &mut ctx.accounts.task;
+  task.hashed_seed = hashed_seed;
   task.id = id;
   task.name = name;
   task.state = String::from(CONDITION_ISSUED);

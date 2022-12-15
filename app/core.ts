@@ -89,7 +89,7 @@ class SolanceCorePrg {
    * @param data Pool buffer data.
    * @returns Pool readable data.
    */
-  parsePoolData = (data: Buffer): PoolData => {
+  private parsePoolData = (data: Buffer): PoolData => {
     return this.program.coder.accounts.decode("pool", data);
   };
 
@@ -98,7 +98,7 @@ class SolanceCorePrg {
    * @param poolAddress Pool address.
    * @returns Pool readable data.
    */
-  getPoolData = async (poolAddress: string): Promise<PoolData> => {
+  private getPoolData = async (poolAddress: string): Promise<PoolData> => {
     return this.program.account.pool.fetch(poolAddress);
   };
 
@@ -107,7 +107,7 @@ class SolanceCorePrg {
    * @param poolAddress The pool address.
    * @returns Treasurer address that holds the secure token treasuries of the pool.
    */
-  deriveTreasurerAddress = async (poolAddress: string) => {
+  private deriveTreasurerAddress = async (poolAddress: string) => {
     if (!isAddress(poolAddress)) throw new Error("Invalid pool address");
     const [treasurerPublicKey] = await web3.PublicKey.findProgramAddress(
       [Buffer.from("treasurer"), new web3.PublicKey(poolAddress).toBuffer()],
@@ -126,7 +126,7 @@ class SolanceCorePrg {
    * @param sendAndConfirm (Optional) Send and confirm the transaction immediately.
    * @returns { tx, txId, poolAddress }
    */
-  createPool = async (
+  private createPool = async (
     {
       x,
       y,
@@ -199,7 +199,7 @@ class SolanceCorePrg {
     return { tx, txId, poolAddress: pool.publicKey.toBase58() };
   };
 
-  swap = async (
+  private swap = async (
     {
       a,
       poolAddress,
@@ -262,15 +262,19 @@ class SolanceCorePrg {
   };
 
   createTask = async (task: Task, sendAndConfirm = true) => {
+
     if (!task) throw new Error("Task not found");
     const { id, name } = task;
     if (!id) throw new Error("Id not found");
+
+    const hashedSeed = toCrc32(id);
     const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(id)],
+      [utf8.encode("task_issuing"), utf8.encode(hashedSeed)],
       this.program.programId
     );
+
     const builder = this.program.methods
-      .taskCreateAndIssueCond(toCrc32(id), name)
+      .taskCreateAndIssueCond(hashedSeed, id, name)
       .accounts({
         task: task_pda,
         authority: this._provider.wallet.publicKey,

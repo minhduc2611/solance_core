@@ -16,7 +16,6 @@ import { initializeAccount, initializeMint, mintTo, toCrc32 } from "./pretest";
 import { expect } from "chai";
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 
-
 describe.only("Task", () => {
   // Configure the client to use the local cluster.
   const provider = AnchorProvider.env();
@@ -37,15 +36,16 @@ describe.only("Task", () => {
   let treasurer: web3.PublicKey;
   let xTreasury: web3.PublicKey;
   let yTreasury: web3.PublicKey;
- 
+  const id1 = uuidv4();
+  const id2 = uuidv4();
   const taskInput1 = {
-    id: toCrc32(uuidv4()),
-    idx: "uuidv2",
+    hashedSeed: toCrc32(id1),
+    id: id1,
     name: "MOCK TASK",
   };
   const taskInput2 = {
-    id: toCrc32(uuidv4()),
-    idx: "uuidv5",
+    hashedSeed: toCrc32(id2),
+    id: id2,
     name: "MOCK TASK2",
   };
 
@@ -102,12 +102,16 @@ describe.only("Task", () => {
   it("Create task #1", async () => {
     // Derive treasury & treasurer
     const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(taskInput1.id)],
+      [utf8.encode("task_issuing"), utf8.encode(taskInput1.hashedSeed)],
       program.programId
     );
 
     const txId = await program.methods
-      .taskCreateAndIssueCond(taskInput1.id, taskInput1.name)
+      .taskCreateAndIssueCond(
+        taskInput1.hashedSeed,
+        taskInput1.id,
+        taskInput1.name
+      )
       .accounts({
         task: task_pda,
         authority: provider.wallet.publicKey,
@@ -120,12 +124,16 @@ describe.only("Task", () => {
   });
   it("Create task #2", async () => {
     const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(taskInput2.id)],
+      [utf8.encode("task_issuing"), utf8.encode(taskInput2.hashedSeed)],
       program.programId
     );
 
     const txId = await program.methods
-      .taskCreateAndIssueCond(taskInput2.id, taskInput2.name)
+      .taskCreateAndIssueCond(
+        taskInput2.hashedSeed,
+        taskInput2.id,
+        taskInput2.name
+      )
       .accounts({
         task: task_pda,
         authority: provider.wallet.publicKey,
@@ -139,21 +147,14 @@ describe.only("Task", () => {
 
   // get data
   it("Get data #1", async () => {
-    const a = await program.account.task.all();
-    console.log("a", a);
-    // a [
-    //   {
-    //     publicKey: PublicKey {
-    //       _bn: <BN: 1ebaf421db8a9ce9e47a05f18ed76c3203cec256149c8a1a25a400576ec262e7>
-    //     },
-    //     account: { id: '2894232254', state: 'CONDITION_ISSUED', name: 'MOCK TASK2' }
-    //   },
-    //   {
-    //     publicKey: PublicKey {
-    //       _bn: <BN: a913a9b911bf17ba8269d11baf771d0d8b157ed8f6682f2355f01fe9be14c1cd>
-    //     },
-    //     account: { id: '2022668531', state: 'CONDITION_ISSUED', name: 'MOCK TASK' }
-    //   }
-    // ]
+    const [task_pda] = await web3.PublicKey.findProgramAddress(
+      [utf8.encode("task_issuing"), utf8.encode(taskInput2.hashedSeed)],
+      program.programId
+    );
+    const task2 = await program.account.task.fetch(task_pda);
+
+    console.log("task2", task2);
+    expect(task2.name).to.be.eq(taskInput2.name);
+
   });
 });

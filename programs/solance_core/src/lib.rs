@@ -11,8 +11,7 @@ pub use schema::*;
 pub mod errors;
 pub use errors::*;
 
-// declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
-declare_id!("593Pj7uEyxExsxUiVV55bDScRzyEM9L7d5UUjjSRUbpv");
+declare_id!("Cwhe8TUEsSucAd4TTCZ3Fej1TDAKpiu5k8C7EuLMXgAn");
 
 #[program]
 pub mod solance_core {
@@ -24,10 +23,11 @@ pub mod solance_core {
 
   pub fn task_create_and_issue_cond(
     ctx: Context<TaskCreateAndIssueCondition>,
+    hashed_seed: String,
     id: String,
     name: String,
   ) -> Result<()> {
-    task_create_and_issue_cond::exec(ctx, id, name)
+    task_create_and_issue_cond::exec(ctx, hashed_seed, id, name)
   }
   pub fn create_pool(ctx: Context<CreatePool>, x: u64, y: u64) -> Result<()> {
     create_pool::exec(ctx, x, y)

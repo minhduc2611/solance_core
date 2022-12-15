@@ -3,7 +3,7 @@ seeds = false
 skip-lint = false
 
 [programs.devnet]
-solance_core = "593Pj7uEyxExsxUiVV55bDScRzyEM9L7d5UUjjSRUbpv"
+solance_core = "Cwhe8TUEsSucAd4TTCZ3Fej1TDAKpiu5k8C7EuLMXgAn"
 
 [registry]
 url = "https://api.apr.dev"

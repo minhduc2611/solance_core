@@ -36,6 +36,10 @@
       ],
       "args": [
         {
+          "name": "hashedSeed",
+          "type": "string"
+        },
+        {
           "name": "id",
           "type": "string"
         },
@@ -284,6 +288,10 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "hashedSeed",
+            "type": "string"
+          },
+          {
             "name": "id",
             "type": "string"
           },
@@ -411,6 +419,6 @@
     }
   ],
   "metadata": {
-    "address": "593Pj7uEyxExsxUiVV55bDScRzyEM9L7d5UUjjSRUbpv"
+    "address": "Cwhe8TUEsSucAd4TTCZ3Fej1TDAKpiu5k8C7EuLMXgAn"
   }
 }

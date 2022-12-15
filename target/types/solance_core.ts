@@ -36,6 +36,10 @@ export type SolanceCore = {
       ],
       "args": [
         {
+          "name": "hashedSeed",
+          "type": "string"
+        },
+        {
           "name": "id",
           "type": "string"
         },
@@ -283,6 +287,10 @@ export type SolanceCore = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "hashedSeed",
+            "type": "string"
+          },
           {
             "name": "id",
             "type": "string"
@@ -450,6 +458,10 @@ export const IDL: SolanceCore = {
       ],
       "args": [
         {
+          "name": "hashedSeed",
+          "type": "string"
+        },
+        {
           "name": "id",
           "type": "string"
         },
@@ -697,6 +709,10 @@ export const IDL: SolanceCore = {
       "type": {
         "kind": "struct",
         "fields": [
+          {
+            "name": "hashedSeed",
+            "type": "string"
+          },
           {
             "name": "id",
             "type": "string"
