@@ -1,6 +1,6 @@
 {
     "name": "solance_core",
-    "version": "1.0.10",
+    "version": "1.0.11",
     "main": "dist/app/index.js",
     "scripts": {
         "build": "yarn clean && tsc",
@@ -16,6 +16,7 @@
         "type": "git",
         "url": "git+https://github.com/minhduc2611/solance_core.git"
     },
+    "homepage": "https://minhduc2611.github.io/solance_core/",
     "bugs": {
         "url": "https://github.com/minhduc2611/solance_core/issues"
     },
