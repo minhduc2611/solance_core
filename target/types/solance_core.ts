@@ -3,7 +3,84 @@ export type SolanceCore = {
   "name": "solance_core",
   "instructions": [
     {
+      "name": "transferLamports",
+      "accounts": [
+        {
+          "name": "to",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "from",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amountOfLamports",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "taskCreateAndIssueCond",
+      "accounts": [
+        {
+          "name": "task",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasurer",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "hashedSeed",
+          "type": "string"
+        },
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "taskCreateRequest",
       "accounts": [
         {
           "name": "task",
@@ -34,29 +111,11 @@ export type SolanceCore = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "hashedSeed",
-          "type": "string"
-        },
-        {
-          "name": "id",
-          "type": "string"
-        },
-        {
-          "name": "name",
-          "type": "string"
-        }
-      ]
+      "args": []
     },
     {
       "name": "createPool",
       "accounts": [
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
         {
           "name": "pool",
           "isMut": true,
@@ -96,6 +155,11 @@ export type SolanceCore = {
           "name": "yTreasury",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
         },
         {
           "name": "systemProgram",
@@ -302,6 +366,22 @@ export type SolanceCore = {
           {
             "name": "name",
             "type": "string"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "provider",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "token",
+            "type": "publicKey"
           }
         ]
       }
@@ -416,6 +496,11 @@ export type SolanceCore = {
       "code": 6002,
       "name": "NoBump",
       "msg": "Cannot find treasurer account"
+    },
+    {
+      "code": 6003,
+      "name": "InsufficientFundsForTransaction",
+      "msg": "Insufficient Funds For Transaction"
     }
   ]
 };
@@ -425,7 +510,84 @@ export const IDL: SolanceCore = {
   "name": "solance_core",
   "instructions": [
     {
+      "name": "transferLamports",
+      "accounts": [
+        {
+          "name": "to",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "from",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "amountOfLamports",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "taskCreateAndIssueCond",
+      "accounts": [
+        {
+          "name": "task",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "treasurer",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
+        },
+        {
+          "name": "clock",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [
+        {
+          "name": "hashedSeed",
+          "type": "string"
+        },
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "taskCreateRequest",
       "accounts": [
         {
           "name": "task",
@@ -456,29 +618,11 @@ export const IDL: SolanceCore = {
           "isSigner": false
         }
       ],
-      "args": [
-        {
-          "name": "hashedSeed",
-          "type": "string"
-        },
-        {
-          "name": "id",
-          "type": "string"
-        },
-        {
-          "name": "name",
-          "type": "string"
-        }
-      ]
+      "args": []
     },
     {
       "name": "createPool",
       "accounts": [
-        {
-          "name": "authority",
-          "isMut": true,
-          "isSigner": true
-        },
         {
           "name": "pool",
           "isMut": true,
@@ -518,6 +662,11 @@ export const IDL: SolanceCore = {
           "name": "yTreasury",
           "isMut": true,
           "isSigner": false
+        },
+        {
+          "name": "authority",
+          "isMut": true,
+          "isSigner": true
         },
         {
           "name": "systemProgram",
@@ -724,6 +873,22 @@ export const IDL: SolanceCore = {
           {
             "name": "name",
             "type": "string"
+          },
+          {
+            "name": "authority",
+            "type": "publicKey"
+          },
+          {
+            "name": "provider",
+            "type": "publicKey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "token",
+            "type": "publicKey"
           }
         ]
       }
@@ -838,6 +1003,11 @@ export const IDL: SolanceCore = {
       "code": 6002,
       "name": "NoBump",
       "msg": "Cannot find treasurer account"
+    },
+    {
+      "code": 6003,
+      "name": "InsufficientFundsForTransaction",
+      "msg": "Insufficient Funds For Transaction"
     }
   ]
 };

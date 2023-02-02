@@ -12,11 +12,17 @@ import {
   BN,
   utils,
 } from "@project-serum/anchor";
-import { initializeAccount, initializeMint, mintTo, requestAirdrop, toCrc32 } from "./pretest";
-import { expect } from "chai";
+import {
+  initializeAccount,
+  initializeMint,
+  mintTo,
+  requestAirdrop,
+  toCrc32,
+} from "./pretest";
+import { assert, expect } from "chai";
 import { utf8 } from "@project-serum/anchor/dist/cjs/utils/bytes";
 
-describe.only("Task", () => {
+describe("Transfer", () => {
   // Configure the client to use the local cluster.
   const provider = AnchorProvider.env();
   setProvider(provider);
@@ -48,7 +54,6 @@ describe.only("Task", () => {
     id: id2,
     name: "MOCK TASK2",
   };
-
   const PRIV_KEY_FOR_TEST_ONLY_A = Buffer.from([
     237, 78, 198, 180, 95, 150, 154, 179, 40, 133, 205, 225, 230, 73, 137, 194,
     249, 19, 101, 224, 155, 129, 253, 184, 19, 190, 21, 181, 238, 127, 28, 158,
@@ -63,6 +68,7 @@ describe.only("Task", () => {
   ]);
   const walletA = web3.Keypair.fromSecretKey(PRIV_KEY_FOR_TEST_ONLY_A);
   const walletB = web3.Keypair.fromSecretKey(PRIV_KEY_FOR_TEST_ONLY_B);
+  // request airdrop
   before(async () => {
     // Init mints
     await initializeMint(6, xToken, spl); // token usually has 6 - 9 decimal ->> create SLP token
@@ -113,127 +119,52 @@ describe.only("Task", () => {
       owner: treasurer,
     });
   });
-  it("Create task #1", async () => {
 
+  it("Get data before", async () => {
     await requestAirdrop(
       provider,
       walletA.publicKey,
       2 * web3.LAMPORTS_PER_SOL
     );
+
+    let a = await provider.connection.getBalance(walletA.publicKey);
+    console.log("balance before A", a);
+    let b = await provider.connection.getBalance(walletB.publicKey);
+    console.log("balance before B", b);
+  });
+
+  it("Try transfer #1", async () => {
     // Derive treasury & treasurer
-    const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(taskInput1.hashedSeed)],
-      program.programId
-    );
-
-    const [treasurer_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("treasurer"), utf8.encode(taskInput1.hashedSeed)],
-      program.programId
-    );
-
     const txId = await program.methods
-      .taskCreateAndIssueCond(
-        taskInput1.hashedSeed,
-        taskInput1.id,
-        taskInput1.name,
-        new BN(1e9)
-      )
+      .transferLamports(new BN("1000000000"))
       .accounts({
-        task: task_pda,
-        treasurer: treasurer_pda,
-        authority: walletA.publicKey,
+        from: walletA.publicKey,
+        to: walletB.publicKey,
         systemProgram: web3.SystemProgram.programId,
-        // tokenProgram: utils.token.TOKEN_PROGRAM_ID,
-        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
       })
       .signers([walletA])
       .rpc();
     expect(txId).to.be.an("string");
-  });
-
-  xit("Create task #2", async () => {
-    const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(taskInput2.hashedSeed)],
-      program.programId
-    );
-
-    const txId = await program.methods
-      .taskCreateAndIssueCond(
-        taskInput2.hashedSeed,
-        taskInput2.id,
-        taskInput2.name,
-        new BN(1e9)
-      )
-      .accounts({
-        task: task_pda,
-        authority: provider.wallet.publicKey,
-        systemProgram: web3.SystemProgram.programId,
-        tokenProgram: utils.token.TOKEN_PROGRAM_ID,
-        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-      })
-      .rpc();
-    expect(txId).to.be.an("string");
-  });
-
-  // get data
-  it("Get data #1", async () => {
-    const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(taskInput1.hashedSeed)],
-      program.programId
-    );
-    const task2 = await program.account.task.fetch(task_pda);
-
-    console.log("task2", task2);
-    expect(task2.name).to.be.eq(taskInput1.name);
-  });
-
-  // Dev request task
-  xit("Dev request task #1", async () => {
-    //user choose task 1
-    const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(taskInput1.hashedSeed)],
-      program.programId
-    );
-
-    // walletA
-    const txId = await program.methods
-      .taskCreateRequest()
-      .accounts({
-        task: task_pda,
-        authority: walletA.publicKey,
-        systemProgram: web3.SystemProgram.programId,
-        tokenProgram: utils.token.TOKEN_PROGRAM_ID,
-        clock: anchor.web3.SYSVAR_CLOCK_PUBKEY,
-      })
-      .signers([walletA])
-      .rpc();
-    expect(txId).to.be.an("string");
-  });
-
-  xit("Expect task 1 has devOwner walletA publicKey #1", async () => {
-    //user choose task 1
-    const [task_pda] = await web3.PublicKey.findProgramAddress(
-      [utf8.encode("task_issuing"), utf8.encode(taskInput1.hashedSeed)],
-      program.programId
-    );
-
-    const task1 = await program.account.task.fetch(task_pda);
-    console.log("task1", task1);
-    expect(task1.name).to.be.eq(taskInput1.name);
-    expect(task1.provider).to.be.eq(walletA.publicKey);
   });
 
   it("Get data after", async () => {
-    // let a = await provider.connection.getBalance(walletA.publicKey);
-    // console.log("balance after A", a);
-    // let b = await provider.connection.getBalance(walletB.publicKey);
-    // console.log("balance after B", b);
-    // const [treasurer_pda] = await web3.PublicKey.findProgramAddress(
-    //   [utf8.encode("treasurer"), utf8.encode(taskInput1.hashedSeed)],
-    //   program.programId
-    // );
-
+    let a = await provider.connection.getBalance(walletA.publicKey);
+    console.log("balance after A", a);
     let b = await provider.connection.getBalance(walletB.publicKey);
     console.log("balance after B", b);
   });
+
+  // it("Try transfer #2, get Insufficient Funds For Transaction", async () => {
+  //   // Derive treasury & treasurer
+    
+  //   assert.throws(() => program.methods
+  //     .transferLamports(new BN("3000000000"))
+  //     .accounts({
+  //       from: walletA.publicKey,
+  //       to: walletB.publicKey,
+  //       systemProgram: web3.SystemProgram.programId,
+  //     })
+  //     .signers([walletA])
+  //     .rpc());
+  // });
 });

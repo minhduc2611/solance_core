@@ -8,4 +8,6 @@ pub enum ErrorCode {
   InvalidAmount,
   #[msg("Cannot find treasurer account")]
   NoBump,
+  #[msg("Insufficient Funds For Transaction")]
+  InsufficientFundsForTransaction,
 }

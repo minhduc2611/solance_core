@@ -99,6 +99,13 @@ export const initializeAccount = async (
   return await provider.sendAndConfirm(tx);
 };
 
+/**
+ * mint x amount of token to this token account
+ * @param amount
+ * @param token
+ * @param tokenAccount
+ * @param splProgram
+ */
 export const mintTo = async (
   amount: BN,
   token: web3.PublicKey,
@@ -128,4 +135,26 @@ export const transferLamports = async (
   });
   const tx = new web3.Transaction().add(ix);
   return await provider.sendAndConfirm(tx);
+};
+
+export const requestAirdrop = async (
+  provider: AnchorProvider,
+  toPubkey: web3.PublicKey,
+  amountOfLamports = 1e9
+) => {
+  console.log("requesting");
+  const connection = provider.connection;
+  try {
+    let tx = await connection.requestAirdrop(
+      toPubkey,
+      amountOfLamports
+    );
+    await connection.confirmTransaction(tx);
+    console.log("done", tx);
+    let balance = await connection.getBalance(toPubkey);
+    console.log("getBalance", balance);
+    
+  } catch (error) {
+    console.log("err", error);
+  }
 };

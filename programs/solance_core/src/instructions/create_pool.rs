@@ -15,19 +15,28 @@ pub struct CreatePoolEvent {
 
 #[derive(Accounts)]
 pub struct CreatePool<'info> {
-  #[account(mut)]
-  pub authority: Signer<'info>,
+
+
   #[account(init, payer = authority, space = Pool::LEN)]
   pub pool: Account<'info, Pool>,
+
   pub x_token: Box<Account<'info, token::Mint>>,
   pub y_token: Box<Account<'info, token::Mint>>,
+
+
+  // source, chủ deposite vào
   #[account(mut)]
   pub src_x_account: Account<'info, token::TokenAccount>,
+
+  // source, chủ deposite vào
   #[account(mut)]
   pub src_y_account: Account<'info, token::TokenAccount>,
+
+  // quản lý treasury, giữ tiền 
+  /// CHECK: Just a pure account, 1 ví bình thường, được quản lý bởi program
   #[account(seeds = [b"treasurer", &pool.key().to_bytes()], bump)]
-  /// CHECK: Just a pure account
   pub treasurer: AccountInfo<'info>,
+
   #[account(
     init,
     payer = authority,
@@ -35,6 +44,7 @@ pub struct CreatePool<'info> {
     associated_token::authority = treasurer
   )]
   pub x_treasury: Box<Account<'info, token::TokenAccount>>,
+  
   #[account(
     init,
     payer = authority,
@@ -42,18 +52,24 @@ pub struct CreatePool<'info> {
     associated_token::authority = treasurer
   )]
   pub y_treasury: Box<Account<'info, token::TokenAccount>>,
+  
+  #[account(mut)]
+  pub authority: Signer<'info>,
   pub system_program: Program<'info, System>,
   pub token_program: Program<'info, token::Token>,
   pub associated_token_program: Program<'info, associated_token::AssociatedToken>,
   pub rent: Sysvar<'info, Rent>,
 }
 
+// bắt đầu tạo pool data bằng cách truyền vào x amount of token, y amount of token 
 pub fn exec(ctx: Context<CreatePool>, x: u64, y: u64) -> Result<()> {
   let pool = &mut ctx.accounts.pool;
   if x <= 0 || y <= 0 {
     return err!(ErrorCode::InvalidAmount);
   }
 
+  // token, chuyển từ src_x_account -> x_treasury
+  // người chuyển authority, tức người kí
   let transfer_x_ctx = CpiContext::new(
     ctx.accounts.token_program.to_account_info(),
     token::Transfer {

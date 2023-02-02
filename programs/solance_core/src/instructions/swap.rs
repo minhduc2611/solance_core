@@ -17,6 +17,7 @@ pub struct Swap<'info> {
   pub authority: Signer<'info>,
   #[account(mut)]
   pub pool: Account<'info, Pool>,
+
   #[account(mut)]
   pub src_x_account: Account<'info, token::TokenAccount>,
   #[account(
@@ -26,9 +27,11 @@ pub struct Swap<'info> {
     associated_token::authority = authority
   )]
   pub dst_y_account: Account<'info, token::TokenAccount>,
+  
   #[account(seeds = [b"treasurer", &pool.key().to_bytes()], bump)]
   /// CHECK: Just a pure account
   pub treasurer: AccountInfo<'info>,
+  
   #[account(mut)]
   pub x_treasury: Box<Account<'info, token::TokenAccount>>,
   #[account(mut)]

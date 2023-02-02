@@ -2,14 +2,14 @@
 seeds = false
 skip-lint = false
 
-[programs.devnet]
+[programs.localnet]
 solance_core = "Cwhe8TUEsSucAd4TTCZ3Fej1TDAKpiu5k8C7EuLMXgAn"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "devnet"
+cluster = "localnet"
 wallet = "/Users/ducle/.config/solana/id.json"
 
 [scripts]
